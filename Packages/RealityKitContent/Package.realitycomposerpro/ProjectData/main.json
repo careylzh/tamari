@@ -1,0 +1,20 @@
+{
+  "pathsToIds" : {
+    "\/RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/GridMaterial.usda" : "CB766F92-EE55-4A63-9401-E7B8C009764D",
+    "\/RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Immersive.usda" : "65F6F990-A780-4474-B78B-572E0E4E273D",
+    "\/RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Scene.usda" : "0A9B4653-B11E-4D6A-850E-C6FCB621626C",
+    "\/RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Untitled Scene.usda" : "D560BB77-AAF3-4BDE-B7C4-989332A4688B",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/GridMaterial.usda" : "66168B71-AB05-424E-8B6C-D33D6E61B08F",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Immersive.usda" : "AF09ED6F-1707-48FD-8720-65B998362C09",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/PortalMaterialScene.usda" : "75E95100-9743-4785-BD1F-556B701C7391",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Robot Scene.usda" : "C879D201-E8CF-470D-A429-07C75BE79774",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Scene.usda" : "D66134B1-3681-4A8E-AFE5-29F257229F3B",
+    "RealityKitContent\/Sources\/RealityKitContent\/RealityKitContent.rkassets\/Untitled%20Scene.usda" : "7877A3AA-8264-4183-88C7-C636074DF8EA"
+  },
+  "projectID" : -713776398099044470,
+  "uuidToIntID" : {
+    "75E95100-9743-4785-BD1F-556B701C7391" : -3756296680892840217,
+    "AF09ED6F-1707-48FD-8720-65B998362C09" : 2219026031594743083,
+    "C879D201-E8CF-470D-A429-07C75BE79774" : -3952770113043692546
+  }
+}

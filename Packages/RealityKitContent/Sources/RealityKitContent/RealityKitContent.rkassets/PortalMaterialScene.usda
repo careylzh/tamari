@@ -1,0 +1,456 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.100.13)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["CircularHoleMat", "Cube", "ScanlineMat"]
+    def Cube "Cube" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        rel material:binding = </Root/ScanlineMat> (
+            bindMaterialAs = "weakerThanDescendants"
+        )
+        double size = 0.2
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1.5, 0.00004166667)
+        float3 xformOp:translate = (0, 0, -0.03801243)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+    }
+
+    def Material "ScanlineMat"
+    {
+        float inputs:Scanline = 0 (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (-358.39645, 277.85834)
+                    int stackingOrderInSubgraph = 1877
+                }
+            }
+        )
+        asset inputs:Texture = @RobotPoster.png@ (
+            customData = {
+                dictionary realitykit = {
+                    float2 positionInSubgraph = (594.343, -0.420266)
+                    int stackingOrderInSubgraph = 1790
+                }
+            }
+        )
+        token outputs:mtlx:surface.connect = </Root/ScanlineMat/PBRSurface.outputs:out>
+        token outputs:realitykit:vertex
+        float2 ui:nodegraph:node:pos = (-978.1458, 559.7315)
+        int ui:nodegraph:node:stackingOrder = 1
+        string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["outputs:mtlx:surface"]
+        float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (1372.5209, 596.27313)
+        int ui:nodegraph:realitykit:subgraphOutputs:stackingOrder = 1173
+
+        def Shader "PBRSurface"
+        {
+            uniform token info:id = "ND_realitykit_pbr_surfaceshader"
+            float inputs:ambientOcclusion = 0.37
+            float inputs:ambientOcclusion.connect = </Root/ScanlineMat/Step.outputs:out>
+            color3f inputs:baseColor.connect = </Root/ScanlineMat/Image.outputs:out>
+            float inputs:clearcoat
+            float3 inputs:clearcoatNormal
+            float inputs:clearcoatRoughness
+            color3f inputs:emissiveColor.connect = </Root/ScanlineMat/Multiply.outputs:out>
+            bool inputs:hasPremultipliedAlpha
+            float inputs:metallic
+            float3 inputs:normal
+            float inputs:opacity.connect = </Root/ScanlineMat/Step.outputs:out>
+            float inputs:opacityThreshold.connect = None
+            float inputs:roughness = 1
+            float inputs:specular.connect = None
+            token outputs:out
+            float2 ui:nodegraph:node:pos = (1111.3807, 465.05447)
+            int ui:nodegraph:node:stackingOrder = 1990
+            string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["inputs:opacity"]
+        }
+
+        def Shader "TextureCoordinates"
+        {
+            uniform token info:id = "ND_texcoord_vector2"
+            float2 outputs:out
+            float2 ui:nodegraph:node:pos = (-386.8509, 137.78094)
+            int ui:nodegraph:node:stackingOrder = 1881
+        }
+
+        def Shader "Image"
+        {
+            uniform token info:id = "ND_image_color3"
+            color3f inputs:default = (1, 1, 1) (
+                colorSpace = "srgb_displayp3"
+            )
+            asset inputs:file = @TV - 1-2.jpg@
+            asset inputs:file.connect = </Root/ScanlineMat.inputs:Texture>
+            string inputs:filtertype
+            float2 inputs:texcoord
+            string inputs:vaddressmode
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (836.3775, 33.167747)
+            int ui:nodegraph:node:stackingOrder = 1921
+        }
+
+        def Shader "Separate2"
+        {
+            uniform token info:id = "ND_separate2_vector2"
+            float2 inputs:in.connect = </Root/ScanlineMat/TextureCoordinates.outputs:out>
+            float outputs:outy
+            float2 ui:nodegraph:node:pos = (-176.88406, 137.0853)
+            int ui:nodegraph:node:stackingOrder = 1992
+        }
+
+        def Shader "Subtract_2"
+        {
+            uniform token info:id = "ND_subtract_float"
+            float inputs:in1.connect = </Root/ScanlineMat/Separate2.outputs:outy>
+            float inputs:in2 = 0.73
+            float inputs:in2.connect = </Root/ScanlineMat/Remap_1.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-24.826826, 276.5639)
+            int ui:nodegraph:node:stackingOrder = 1869
+        }
+
+        def Shader "Step"
+        {
+            uniform token info:id = "ND_realitykit_step_float"
+            float inputs:edge = 1
+            float inputs:edge.connect = </Root/ScanlineMat/Subtract_2.outputs:out>
+            float inputs:in.connect = None
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (308.22748, 218.24074)
+            int ui:nodegraph:node:stackingOrder = 1869
+        }
+
+        def Shader "Subtract_4"
+        {
+            uniform token info:id = "ND_subtract_float"
+            float inputs:in1.connect = </Root/ScanlineMat/Step.outputs:out>
+            float inputs:in2.connect = </Root/ScanlineMat/Step_1.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (598.8907, 262.02567)
+            int ui:nodegraph:node:stackingOrder = 1873
+        }
+
+        def Shader "ConstantColor3_1"
+        {
+            uniform token info:id = "ND_constant_color3"
+            color3f inputs:value = (1, 0.043376036, 0) (
+                colorSpace = "srgb_displayp3"
+            )
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (614.6309, 162.4901)
+            int ui:nodegraph:node:stackingOrder = 1800
+        }
+
+        def Shader "Multiply_2"
+        {
+            uniform token info:id = "ND_multiply_color3FA"
+            color3f inputs:in1.connect = </Root/ScanlineMat/ConstantColor3_1.outputs:out>
+            float inputs:in2.connect = </Root/ScanlineMat/SmoothStep.outputs:out>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (742.1273, 256.5138)
+            int ui:nodegraph:node:stackingOrder = 1798
+        }
+
+        def Shader "Step_1"
+        {
+            uniform token info:id = "ND_realitykit_step_float"
+            float inputs:edge = 1
+            float inputs:edge.connect = </Root/ScanlineMat/Add_1.outputs:out>
+            float inputs:in = 0
+            float inputs:in.connect = None
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (312.96732, 378.62173)
+            int ui:nodegraph:node:stackingOrder = 1869
+        }
+
+        def Shader "SmoothStep"
+        {
+            uniform token info:id = "ND_smoothstep_float"
+            float inputs:high = 0.03
+            float inputs:in.connect = </Root/ScanlineMat/Add_1.outputs:out>
+            float inputs:low = -0.03
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (315.25876, 554.2589)
+            int ui:nodegraph:node:stackingOrder = 1869
+        }
+
+        def Shader "Add_1"
+        {
+            uniform token info:id = "ND_add_float"
+            float inputs:in1.connect = </Root/ScanlineMat/Subtract_2.outputs:out>
+            float inputs:in2.connect = </Root/ScanlineMat/ConstantFloat.outputs:out>
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (132.6392, 474.36844)
+            int ui:nodegraph:node:stackingOrder = 1869
+        }
+
+        def Shader "ConstantFloat"
+        {
+            uniform token info:id = "ND_constant_float"
+            float inputs:value = 0.005
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-48.56016, 509.96048)
+            int ui:nodegraph:node:stackingOrder = 1869
+        }
+
+        def Shader "Multiply"
+        {
+            uniform token info:id = "ND_multiply_color3FA"
+            color3f inputs:in1.connect = </Root/ScanlineMat/Add_2.outputs:out>
+            float inputs:in2 = 4.82
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (903.95496, 361.5742)
+            int ui:nodegraph:node:stackingOrder = 1802
+        }
+
+        def Shader "Add_2"
+        {
+            uniform token info:id = "ND_add_color3FA"
+            color3f inputs:in1.connect = </Root/ScanlineMat/Multiply_2.outputs:out>
+            float inputs:in2.connect = </Root/ScanlineMat/Subtract_4.outputs:out>
+            color3f outputs:out
+            float2 ui:nodegraph:node:pos = (827.76086, 320.9036)
+            int ui:nodegraph:node:stackingOrder = 1796
+        }
+
+        def Shader "Remap_1"
+        {
+            uniform token info:id = "ND_remap_float"
+            float inputs:in.connect = </Root/ScanlineMat.inputs:Scanline>
+            float inputs:outhigh = -0.1
+            float inputs:outlow = 1.1
+            float outputs:out
+            float2 ui:nodegraph:node:pos = (-190.69455, 301.66168)
+            int ui:nodegraph:node:stackingOrder = 1875
+        }
+    }
+
+    def Xform "ParticleEmitter"
+    {
+        reorder nameChildren = ["VFXEmitter", "ParticleEmitter2"]
+        float3 xformOp:translate = (0, -0.14332968, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def RealityKitComponent "VFXEmitter"
+        {
+            token info:id = "RealityKit.VFXEmitter"
+
+            def RealityKitStruct "currentState"
+            {
+                token birthDirection = "Constant"
+                token birthLocation = "Surface"
+                int64 burstCount = 1000
+                float3 emissionDirection = (0, 1, 0)
+                double emissionDuration = 0.01
+                double emissionDurationVariation = 0
+                token emitterShape = "Plane"
+                double idleDuration = 0.01
+                double idleDurationVariation = 0
+                bool isEmitting = 1
+                bool isLocal = 0
+                bool isSpawningEnabled = 0
+                bool loops = 1
+                float particleSpeed = 0.1
+                float particleSpeedVariation = 0.1
+                float3 shapeSize = (0.1, 0, 0)
+                bool spawnInheritParentColor = 0
+                token spawnOccasion = "OnDeath"
+                float spawnSpreadFactor = 0
+                float spawnSpreadFactorVariation = 0
+                float spawnVelocityFactor = 1
+                double warmupDuration = 0
+
+                def RealityKitStruct "mainEmitter"
+                {
+                    float3 acceleration = (0, -0.05, 0)
+                    token animationRepeatMode = "PlayOnce"
+                    token billboardMode = "Billboard"
+                    float birthRate = 3000
+                    float birthRateVariation = 0
+                    token blendMode = "Alpha"
+                    float colorEvolutionPower = 1
+                    int64 columnCount = 4
+                    float dampingFactor = 8
+                    float4 endColorA = (0.0013309671, 0.03458923, 1, 1)
+                    float4 endColorB = (0.11386989, 0.0064959256, 0.10626237, 1)
+                    float frameRate = 0
+                    float frameRateVariation = 0
+                    int64 initialFrame = 2
+                    int64 initialFrameVariation = 6
+                    bool isAnimated = 1
+                    bool isLightingEnabled = 0
+                    float noiseAnimationSpeed = 0
+                    float noiseScale = 1
+                    float noiseStrength = 0.1
+                    token opacityOverLife = "LinearFadeOut"
+                    float particleAngle = 0
+                    float particleAngleVariation = 0
+                    float particleAngularVelocity = 0
+                    float particleAngularVelocityVariation = 1
+                    asset particleImage = @ParticleEmitterPresetTextures/dustsheet.exr@
+                    double particleLifeSpan = 4
+                    double particleLifeSpanVariation = 1
+                    float particleMass = 1
+                    float particleMassVariation = 0.8
+                    float particleSize = 0.002
+                    float particleSizeVariation = 0
+                    float3 radialGravityCenter = (0, -0.1, 0)
+                    float radialGravityStrength = -0.1
+                    int64 rowCount = 4
+                    float sizeMultiplierAtEndOfLifespan = 8
+                    float sizeMultiplierAtEndOfLifespanPower = 0.2
+                    token sortOrder = "DecreasingDepth"
+                    float spreadingAngle = 0
+                    float4 startColorA = (1, 1, 1, 0.26)
+                    float4 startColorB = (1, 1, 1, 0.07)
+                    float stretchFactor = 0
+                    bool useEndColor = 0
+                    bool useEndColorRange = 0
+                    bool useStartColorRange = 1
+                    float3 vortexDirection = (0, 1, 0)
+                    float vortexStrength = 0
+                }
+
+                def RealityKitStruct "spawnedEmitter"
+                {
+                }
+            }
+        }
+
+        def Xform "ParticleEmitter2"
+        {
+            quatf xformOp:orient = (1, 0, 0, 0)
+            float3 xformOp:scale = (1, 1, 1)
+            float3 xformOp:translate = (0, 0, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+            def RealityKitComponent "VFXEmitter"
+            {
+                token info:id = "RealityKit.VFXEmitter"
+
+                def RealityKitStruct "currentState"
+                {
+                    token birthDirection = "Constant"
+                    token birthLocation = "Surface"
+                    int64 burstCount = 100
+                    float3 emissionDirection = (0, 1, 0)
+                    double emissionDuration = 0.1
+                    double emissionDurationVariation = 0
+                    token emitterShape = "Plane"
+                    double idleDuration = 0
+                    double idleDurationVariation = 0
+                    bool isEmitting = 1
+                    bool isLocal = 0
+                    bool isSpawningEnabled = 1
+                    bool loops = 1
+                    float particleSpeed = 0.3
+                    float particleSpeedVariation = 0.2
+                    float3 shapeSize = (0.1, 0.01, 0.01)
+                    bool spawnInheritParentColor = 0
+                    token spawnOccasion = "OnBirth"
+                    float spawnSpreadFactor = 0
+                    float spawnSpreadFactorVariation = 0
+                    float spawnVelocityFactor = 0.5
+                    double warmupDuration = 0
+
+                    def RealityKitStruct "mainEmitter"
+                    {
+                        float3 acceleration = (0, -1, 0)
+                        token billboardMode = "Billboard"
+                        float birthRate = 1000
+                        float birthRateVariation = 0
+                        token blendMode = "Additive"
+                        float colorEvolutionPower = 0.2
+                        float dampingFactor = 0
+                        float4 endColorA = (0.9986965, 0.9674097, 0, 1)
+                        float4 endColorB = (1, 1, 1, 1)
+                        bool isLightingEnabled = 0
+                        float noiseAnimationSpeed = 0
+                        float noiseScale = 1
+                        float noiseStrength = 0
+                        token opacityOverLife = "GradualFadeInOut"
+                        float particleAngle = 0
+                        float particleAngleVariation = 0
+                        float particleAngularVelocity = 0
+                        float particleAngularVelocityVariation = 0
+                        asset particleImage = @ParticleEmitterPresetTextures/flare.exr@
+                        double particleLifeSpan = 0.2
+                        double particleLifeSpanVariation = 0.22
+                        float particleMass = 1
+                        float particleMassVariation = 0.1
+                        float particleSize = 0.03
+                        float particleSizeVariation = 0.003
+                        float3 radialGravityCenter = (1, 1, 0)
+                        float radialGravityStrength = 0
+                        float sizeMultiplierAtEndOfLifespan = 0.1
+                        float sizeMultiplierAtEndOfLifespanPower = 0.001
+                        token sortOrder = "IncreasingDepth"
+                        float spreadingAngle = 0.2
+                        float4 startColorA = (1, 1, 1, 1)
+                        float4 startColorB = (1, 1, 1, 1)
+                        float stretchFactor = 10
+                        bool useEndColor = 1
+                        bool useEndColorRange = 1
+                        bool useStartColorRange = 1
+                        float3 vortexDirection = (0, 1, 0)
+                        float vortexStrength = 0
+                    }
+
+                    def RealityKitStruct "spawnedEmitter"
+                    {
+                        float3 acceleration = (0, -2, 0)
+                        token billboardMode = "Billboard"
+                        float birthRate = 400
+                        float birthRateVariation = 0
+                        token blendMode = "Additive"
+                        float colorEvolutionPower = 1
+                        float dampingFactor = 0
+                        float4 endColorA = (0.0013309671, 0.03458923, 1, 1)
+                        float4 endColorB = (0.11386989, 0.0064959256, 0.10626237, 1)
+                        bool isLightingEnabled = 0
+                        float noiseAnimationSpeed = 0
+                        float noiseScale = 0.4
+                        float noiseStrength = 3
+                        token opacityOverLife = "Constant"
+                        float particleAngle = 0
+                        float particleAngleVariation = 0
+                        float particleAngularVelocity = 0
+                        float particleAngularVelocityVariation = 0
+                        asset particleImage = @ParticleEmitterPresetTextures/flare.exr@
+                        double particleLifeSpan = 0.25
+                        double particleLifeSpanVariation = 0
+                        float particleMass = 1
+                        float particleMassVariation = 0
+                        float particleSize = 0.001
+                        float particleSizeVariation = 0.001
+                        float3 radialGravityCenter = (0, 0, 0)
+                        float radialGravityStrength = 0
+                        float sizeMultiplierAtEndOfLifespan = 1.3
+                        float sizeMultiplierAtEndOfLifespanPower = 0
+                        token sortOrder = "IncreasingID"
+                        float spreadingAngle = 0
+                        float4 startColorA = (1, 1, 1, 1)
+                        float4 startColorB = (1, 1, 1, 1)
+                        float stretchFactor = 0
+                        bool useEndColor = 0
+                        bool useEndColorRange = 0
+                        bool useStartColorRange = 0
+                        float3 vortexDirection = (0, 1, 0)
+                        float vortexStrength = 0
+                    }
+                }
+            }
+        }
+    }
+}
+

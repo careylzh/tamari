@@ -1,0 +1,223 @@
+#usda 1.0
+(
+    customLayerData = {
+        string creator = "Reality Composer Pro Version 2.0 (448.100.13)"
+    }
+    defaultPrim = "Root"
+    metersPerUnit = 1
+    upAxis = "Y"
+)
+
+def Xform "Root"
+{
+    reorder nameChildren = ["Robot", "RobotParent"]
+    def Cube "RobotParent" (
+        active = true
+        prepend apiSchemas = ["MaterialBindingAPI"]
+    )
+    {
+        reorder nameChildren = ["DefaultMaterial", "Collider", "RigidBody", "Robot"]
+        rel material:binding = </Root/RobotParent/DefaultMaterial>
+        double size = 0.2
+        quatf xformOp:orient = (1, 0, 0, 0)
+        float3 xformOp:scale = (1, 1, 1)
+        float3 xformOp:translate = (0, 0, 0)
+        uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+        def Material "DefaultMaterial"
+        {
+            token outputs:mtlx:surface.connect = </Root/RobotParent/DefaultMaterial/PreviewSurface.outputs:out>
+            token outputs:realitykit:vertex
+            token outputs:surface.connect = </Root/RobotParent/DefaultMaterial/DefaultSurfaceShader.outputs:surface>
+            float2 ui:nodegraph:realitykit:subgraphOutputs:pos = (0, 110.5)
+
+            def Shader "DefaultSurfaceShader" (
+                active = false
+            )
+            {
+                uniform token info:id = "UsdPreviewSurface"
+                color3f inputs:diffuseColor = (1, 1, 1)
+                float inputs:roughness = 0.75
+                token outputs:surface
+            }
+
+            def Shader "PreviewSurface"
+            {
+                uniform token info:id = "ND_UsdPreviewSurface_surfaceshader"
+                float inputs:occlusion = 0
+                float inputs:opacity = 0
+                token outputs:out
+                float2 ui:nodegraph:node:pos = (-255, 105)
+                int ui:nodegraph:node:stackingOrder = 17
+                string[] ui:nodegraph:realitykit:node:attributesShowingChildren = ["Advanced"]
+            }
+        }
+
+        def RealityKitComponent "Collider"
+        {
+            uint group = 1
+            uniform token info:id = "RealityKit.Collider"
+            uint mask = 4294967295
+            token type = "Default"
+
+            def RealityKitStruct "Shape"
+            {
+                float3 extent = (0.2, 0.2, 0.2)
+                token shapeType = "Box"
+
+                def RealityKitStruct "pose"
+                {
+                }
+            }
+        }
+
+        def RealityKitComponent "RigidBody"
+        {
+            bool gravityEnabled = 0
+            uniform token info:id = "RealityKit.RigidBody"
+            token motionType = "Kinematic"
+
+            def RealityKitStruct "massFrame"
+            {
+                def RealityKitStruct "m_pose"
+                {
+                }
+            }
+
+            def RealityKitStruct "material"
+            {
+            }
+        }
+
+        def "Robot" (
+            active = true
+            prepend apiSchemas = ["MaterialBindingAPI"]
+            customData = {
+                float3 rotationEulerHint = (1.5707959, -1.5707963, 0)
+            }
+            references = @Animation_FunnyDancing_01.usdz@
+        )
+        {
+            reorder nameChildren = ["Armature", "_materials", "env_light", "RobotParent"]
+            rel material:binding = </Root/RobotParent/Robot/_materials/Material_1> (
+                bindMaterialAs = "weakerThanDescendants"
+            )
+            quatf xformOp:orient = (0.5, -0.5, -0.5, -0.49999994)
+            float3 xformOp:scale = (1, 0.9999998, 1.0000025)
+            float3 xformOp:translate = (0, -0.15976769, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:orient", "xformOp:scale"]
+
+            over "_materials"
+            {
+                over "Material_1"
+                {
+                    token inputs:frame:stPrimvarName = "st" (
+                        customData = {
+                            dictionary realitykit = {
+                                bool hide = 1
+                            }
+                        }
+                    )
+                    token outputs:mtlx:surface
+                    token outputs:realitykit:vertex
+
+                    def Shader "roughness"
+                    {
+                        uniform token info:id = "UsdUVTexture"
+                        asset inputs:file = @roughness_map.png@
+                        float2 inputs:st.connect = </Root/RobotParent/Robot/_materials/Material_1/roughness/TexCoordReader.outputs:result>
+                        float outputs:r
+
+                        def Shader "TexCoordReader"
+                        {
+                            uniform token info:id = "UsdPrimvarReader_float2"
+                            token inputs:varname.connect = </Root/RobotParent/Robot/_materials/Material_1.inputs:frame:stPrimvarName>
+                            float2 outputs:result
+                        }
+                    }
+
+                    over "Principled_BSDF"
+                    {
+                        float inputs:metallic = 0.5
+                        float inputs:metallic.connect = None
+                        normal3f inputs:normal = (0, 0, 1)
+                        normal3f inputs:normal.connect = </Root/RobotParent/Robot/_materials/Material_1/normal.outputs:rgb>
+                        float inputs:roughness.connect = </Root/RobotParent/Robot/_materials/Material_1/roughness.outputs:r>
+                    }
+
+                    def Shader "normal"
+                    {
+                        uniform token info:id = "UsdUVTexture"
+                        asset inputs:file = @normal_map.png@
+                        float2 inputs:st.connect = </Root/RobotParent/Robot/_materials/Material_1/normal/TexCoordReader.outputs:result>
+                        normal3f outputs:rgb
+
+                        def Shader "TexCoordReader"
+                        {
+                            uniform token info:id = "UsdPrimvarReader_float2"
+                            token inputs:varname.connect = </Root/RobotParent/Robot/_materials/Material_1.inputs:frame:stPrimvarName>
+                            float2 outputs:result
+                        }
+                    }
+
+                    def Shader "metallic"
+                    {
+                        uniform token info:id = "UsdUVTexture"
+                        asset inputs:file = @metallic_map_clean.png@
+                        float2 inputs:st.connect = </Root/RobotParent/Robot/_materials/Material_1/metallic/TexCoordReader.outputs:result>
+                        float outputs:r
+
+                        def Shader "TexCoordReader"
+                        {
+                            uniform token info:id = "UsdPrimvarReader_float2"
+                            token inputs:varname.connect = </Root/RobotParent/Robot/_materials/Material_1.inputs:frame:stPrimvarName>
+                            float2 outputs:result
+                        }
+                    }
+                }
+            }
+
+            over "Armature"
+            {
+                def RealityKitComponent "GroundingShadow"
+                {
+                    bool enableIBLShadow = 1
+                    bool enableMeshShadow = 1
+                    uniform token info:id = "RealityKit.GroundingShadow"
+                }
+            }
+
+            def RealityKitComponent "AnimationLibrary"
+            {
+                reorder nameChildren = ["Dance", "Jump", "Idle"]
+                token info:id = "RealityKit.AnimationLibrary"
+
+                def RealityKitAnimationFile "Dance"
+                {
+                    uniform asset file = @Animation_FunnyDancing_01.usdz@
+                    uniform string name = "Dance"
+                }
+
+                def RealityKitAnimationFile "Jump"
+                {
+                    uniform asset file = @Animation_Jump_with_Arms_Open.usdz@
+                    uniform string name = "Jump"
+                }
+
+                def RealityKitAnimationFile "Idle"
+                {
+                    uniform asset file = @Animation_Look_Around_Dumbfounded.usdz@
+                    uniform string name = "Idle"
+                }
+
+                def RealityKitClipDefinition "Clip_Jump"
+                {
+                    uniform string[] clipNames = ["JumpStart", "JumpEnd"]
+                    uniform string sourceAnimationName = "Jump"
+                    uniform double[] startTimes = [0, 2.170166666666667]
+                }
+            }
+        }
+    }
+}
+
