@@ -7,6 +7,7 @@ By recognising and responding to the architectural features of a space—such as
 Each session concludes with a self check-in, modelled after post-therapy treatment flows, promoting emotional awareness and reflective practice. Through these artefacts, Tamari explores the untapped potential of repetitive, spatially-guided eye motion as a means of relaxation, offering a fresh approach to micro-moments of mental wellness.
 
 Research: https://drive.google.com/file/d/1Lwp9hBwb4hO5CXuFUzPcHwYfjTowZVIQ/view?usp=sharing
+
 Demo: https://www.youtube.com/watch?v=pKUKSDK7dv8&ab_channel=CareyLzh
 
 Huang Kai Xing
